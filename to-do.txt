@@ -1,0 +1,4 @@
+1. Voxelize the point cloud into a scalar occupancy field.
+2. Run a surface meshing algorithm over that field.
+3. Output triangles directly from the mesher.
+4. Replace the current demo render path so cylinders, spheres, and the other sample shapes are drawn from triangle meshes instead of voxel face quads.
