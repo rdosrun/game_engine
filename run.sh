@@ -11,6 +11,8 @@ find_proton() {
     fi
 
     local candidates=(
+        "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton - Experimental/proton"
+        "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton Experimental/proton"
         "$HOME/.steam/steam/steamapps/common/Proton - Experimental/proton"
         "$HOME/.steam/steam/steamapps/common/Proton Experimental/proton"
         "$HOME/.local/share/Steam/steamapps/common/Proton - Experimental/proton"
@@ -27,6 +29,7 @@ find_proton() {
     done
 
     local steam_common_dirs=(
+        "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common"
         "$HOME/.steam/steam/steamapps/common"
         "$HOME/.local/share/Steam/steamapps/common"
         "$HOME/.steam/root/steamapps/common"
@@ -57,8 +60,9 @@ case "$(uname -s)" in
             exit 1
         }
 
-        export STEAM_COMPAT_CLIENT_INSTALL_PATH="${STEAM_COMPAT_CLIENT_INSTALL_PATH:-$HOME/.local/share/Steam}"
+        export STEAM_COMPAT_CLIENT_INSTALL_PATH="${STEAM_COMPAT_CLIENT_INSTALL_PATH:-$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam}"
         export STEAM_COMPAT_DATA_PATH="${STEAM_COMPAT_DATA_PATH:-$ROOT_DIR/.proton-prefix}"
+        mkdir -p "$STEAM_COMPAT_DATA_PATH"
 
         exec "$PROTON_PATH" run "$GAME_EXE"
         ;;

@@ -17,6 +17,8 @@ Screen g_screen = {
     .width = WINDOW_WIDTH,
     .height = WINDOW_HEIGHT
 };
+int g_fps = 0;
+static bool g_limit_fps = true;
 
 Controller g_control = {
     .pos_x = 0.0f,
@@ -34,6 +36,10 @@ static bool is_focused = true;
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_KEYDOWN:
+            if (wParam == VK_F1 && !(lParam & (1 << 30))) {
+                g_limit_fps = !g_limit_fps;
+                return 0;
+            }
             if (wParam < 256) g_control.keys[wParam] = true;
             return 0;
         case WM_KEYUP:
@@ -94,6 +100,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     double target_frame_time = 1.0 / 60.0;
     LARGE_INTEGER last_time;
     QueryPerformanceCounter(&last_time);
+    double fps_accumulator = 0.0;
+    int fps_frames = 0;
 
     while (is_running) {
         MSG msg;
@@ -117,7 +125,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         QueryPerformanceCounter(&current_time);
         double elapsed_time = (double)(current_time.QuadPart - last_time.QuadPart) / frequency.QuadPart;
 
-        if (elapsed_time < target_frame_time) {
+        if (g_limit_fps && elapsed_time < target_frame_time) {
             DWORD sleep_ms = (DWORD)((target_frame_time - elapsed_time) * 1000);
             if (sleep_ms > 0) Sleep(sleep_ms);
             do {
@@ -125,6 +133,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 elapsed_time = (double)(current_time.QuadPart - last_time.QuadPart) / frequency.QuadPart;
             } while (elapsed_time < target_frame_time);
         }
+
+        fps_accumulator += elapsed_time;
+        ++fps_frames;
+        if (fps_accumulator >= 1.0) {
+            g_fps = (int)(fps_frames / fps_accumulator);
+            fps_accumulator = 0.0;
+            fps_frames = 0;
+        }
+
         last_time = current_time;
     }
 
