@@ -2048,3 +2048,157 @@ drive_c/windows/syswow64/icudt68.dll
 drive_c/windows/system32/nvapi64.dll
 drive_c/windows/system32/nvofapi64.dll
 drive_c/windows/syswow64/nvapi.dll
+drive_c/Program Files (x86)/
+drive_c/Program Files (x86)/Common Files/
+drive_c/Program Files (x86)/Common Files/System/
+drive_c/Program Files (x86)/Common Files/System/ADO/
+drive_c/Program Files (x86)/Common Files/System/OLE DB/
+drive_c/Program Files (x86)/Windows NT/
+drive_c/Program Files (x86)/Windows NT/Accessories/
+drive_c/Program Files (x86)/Windows Media Player/
+drive_c/Program Files (x86)/Internet Explorer/
+drive_c/Program Files/
+drive_c/Program Files/Common Files/
+drive_c/Program Files/Common Files/System/
+drive_c/Program Files/Common Files/System/ADO/
+drive_c/Program Files/Common Files/System/OLE DB/
+drive_c/Program Files/Common Files/Microsoft Shared/
+drive_c/Program Files/Common Files/Microsoft Shared/TextConv/
+drive_c/Program Files/Windows NT/
+drive_c/Program Files/Windows NT/Accessories/
+drive_c/Program Files/Windows Media Player/
+drive_c/Program Files/Internet Explorer/
+drive_c/windows/system32/mui/
+drive_c/windows/system32/Speech/
+drive_c/windows/system32/Speech/Engines/
+drive_c/windows/system32/Speech/Engines/TTS/
+drive_c/windows/system32/Speech/Common/
+drive_c/windows/system32/gecko/
+drive_c/windows/system32/gecko/plugin/
+drive_c/windows/system32/WindowsPowerShell/
+drive_c/windows/system32/WindowsPowerShell/v1.0/
+drive_c/windows/system32/spool/printers/
+drive_c/windows/system32/tasks/
+drive_c/windows/system32/catroot/
+drive_c/windows/system32/wbem/
+drive_c/windows/security/
+drive_c/windows/help/
+drive_c/windows/command/
+drive_c/windows/winsxs/x86_microsoft.windows.gdiplus_6595b64144ccf1df_1.1.7601.23038_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.2600.2982_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft-windows-msxml30_31bf3856ad364e35_6.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft-windows-msxml60_31bf3856ad364e35_6.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.msxml2_6bd6b9abf345378f_4.1.0.0_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.windows.gdiplus_6595b64144ccf1df_1.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.vc90.atl_1fc8b3b9a1e18e3b_9.0.30729.6161_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft-windows-msxml30_31bf3856ad364e35_6.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft-windows-msxml60_31bf3856ad364e35_6.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.windows.gdiplus_6595b64144ccf1df_1.0.6000.16386_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.vc90.atl_1fc8b3b9a1e18e3b_9.0.30729.6161_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.6161_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.vc80.atl_1fc8b3b9a1e18e3b_8.0.50727.4053_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.vc80.atl_1fc8b3b9a1e18e3b_8.0.50727.4053_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.2600.2982_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.windows.gdiplus_6595b64144ccf1df_1.1.7601.23038_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.6161_none_deadbeef/
+drive_c/windows/winsxs/amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.9672_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.9672_none_deadbeef/
+drive_c/windows/winsxs/x86_microsoft.msxml2_6bd6b9abf345378f_4.1.0.0_none_deadbeef/
+drive_c/windows/system/
+drive_c/windows/temp/
+drive_c/windows/logs/
+drive_c/windows/syswow64/mui/
+drive_c/windows/syswow64/Speech/
+drive_c/windows/syswow64/Speech/Engines/
+drive_c/windows/syswow64/Speech/Engines/TTS/
+drive_c/windows/syswow64/Speech/Common/
+drive_c/windows/syswow64/gecko/
+drive_c/windows/syswow64/gecko/plugin/
+drive_c/windows/syswow64/WindowsPowerShell/
+drive_c/windows/syswow64/WindowsPowerShell/v1.0/
+drive_c/windows/syswow64/wbem/
+drive_c/windows/performance/
+drive_c/windows/performance/winsat/
+drive_c/windows/performance/winsat/datastore/
+drive_c/windows/Microsoft.NET/DirectX for Managed Code/
+drive_c/windows/Microsoft.NET/Framework/v3.5/
+drive_c/windows/Microsoft.NET/Framework/v3.0/
+drive_c/windows/Microsoft.NET/Framework/v3.0/windows communication foundation/
+drive_c/windows/Microsoft.NET/Framework/v3.0/wpf/
+drive_c/windows/Microsoft.NET/Framework64/v3.5/
+drive_c/windows/Microsoft.NET/Framework64/v3.0/
+drive_c/windows/Microsoft.NET/Framework64/v3.0/windows communication foundation/
+drive_c/windows/Microsoft.NET/Framework64/v3.0/wpf/
+drive_c/windows/tasks/
+drive_c/ProgramData/
+drive_c/ProgramData/Microsoft/
+drive_c/ProgramData/Microsoft/Windows/
+drive_c/ProgramData/Microsoft/Windows/Templates/
+drive_c/ProgramData/Microsoft/Windows/Start Menu/
+drive_c/ProgramData/Microsoft/Windows/Start Menu/Programs/
+drive_c/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/
+drive_c/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/
+drive_c/users/steamuser/Desktop/
+drive_c/users/steamuser/Searches/
+drive_c/users/steamuser/Music/
+drive_c/users/steamuser/Contacts/
+drive_c/users/steamuser/Favorites/
+drive_c/users/steamuser/Downloads/
+drive_c/users/steamuser/Videos/
+drive_c/users/steamuser/Saved Games/
+drive_c/users/steamuser/Links/
+drive_c/users/steamuser/Pictures/
+drive_c/users/steamuser/Pictures/Screenshots/
+drive_c/users/steamuser/Documents/
+drive_c/users/steamuser/Documents/Music/
+drive_c/users/steamuser/Documents/Downloads/
+drive_c/users/steamuser/Documents/Videos/
+drive_c/users/steamuser/Documents/Pictures/
+drive_c/users/steamuser/Documents/Templates/
+drive_c/users/steamuser/AppData/
+drive_c/users/steamuser/AppData/Roaming/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/SendTo/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Themes/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Recent/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/AccountPictures/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Network Shortcuts/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Templates/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Start Menu/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Administrative Tools/
+drive_c/users/steamuser/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/StartUp/
+drive_c/users/steamuser/AppData/Local/
+drive_c/users/steamuser/AppData/Local/Microsoft/
+drive_c/users/steamuser/AppData/Local/Microsoft/Windows/
+drive_c/users/steamuser/AppData/Local/Microsoft/Windows/History/
+drive_c/users/steamuser/AppData/Local/Microsoft/Windows/INetCookies/
+drive_c/users/steamuser/AppData/Local/Microsoft/Windows/INetCache/
+drive_c/users/steamuser/AppData/Local/Temp/
+drive_c/users/steamuser/AppData/LocalLow/
+drive_c/users/Public/
+drive_c/users/Public/Desktop/
+drive_c/users/Public/Music/
+drive_c/users/Public/Videos/
+drive_c/users/Public/Pictures/
+drive_c/users/Public/Documents/
+drive_c/Program Files (x86)/Steam/steamclient.dll
+drive_c/Program Files (x86)/Steam/steamclient64.dll
+drive_c/Program Files (x86)/Steam/GameOverlayRenderer64.dll
+drive_c/Program Files (x86)/Steam/steam.exe
+drive_c/Program Files (x86)/Steam/Steam.dll
+drive_c/vrclient/bin/vrclient.dll
+drive_c/vrclient/bin/vrclient_x64.dll
+drive_c/windows/syswow64/openvr_api_dxvk.dll
+drive_c/windows/system32/openvr_api_dxvk.dll
+drive_c/windows/system32/icuin68.dll
+drive_c/windows/syswow64/icuin68.dll
+drive_c/windows/system32/icuuc68.dll
+drive_c/windows/syswow64/icuuc68.dll
+drive_c/windows/system32/icudt68.dll
+drive_c/windows/syswow64/icudt68.dll
+drive_c/windows/system32/nvapi64.dll
+drive_c/windows/system32/nvofapi64.dll
+drive_c/windows/syswow64/nvapi.dll

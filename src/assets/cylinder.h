@@ -1,8 +1,10 @@
 #ifndef CYLINDER_H
+#if !defined(RENDERER_H)
+#include "../renderer.h"
+#else
 #define CYLINDER_H
 
 #include <stdint.h>
-#include "../renderer.h"
 #include "primitive_points.h"
 
 /*
@@ -37,4 +39,95 @@ static void draw_cylinder_projected(
     draw_circle(center_x, top_y, radius, triangle_count, cap_color);
 }
 
+static DirtyRect draw_cylinder_mesh(
+    const PrimitiveCylinder *cylinder,
+    const RendererFrameContext *frame,
+    int segment_count,
+    int offset_x,
+    int offset_y,
+    int offset_z,
+    int theta_x,
+    int theta_y,
+    int theta_z,
+    uint32_t cap_color,
+    uint32_t side_color
+) {
+    DirtyRect cylinder_dirty = make_dirty_rect(g_screen.width, g_screen.height, 0, 0);
+
+    if (!cylinder || !frame || cylinder->radius <= 0 || cylinder->height <= 0) {
+        return cylinder_dirty;
+    }
+
+    if (segment_count < 3) segment_count = 3;
+    if (segment_count > 256) segment_count = 256;
+
+    int center_x = cylinder->center[0];
+    int center_y = cylinder->center[1];
+    int center_z = cylinder->center[2];
+    int radius = cylinder->radius;
+    int half_height = cylinder->height / 2;
+    int back_z = center_z - half_height;
+    int front_z = center_z + half_height;
+
+    for (int i = 0; i < segment_count; ++i) {
+        int angle0 = (i * 256) / segment_count;
+        int angle1 = ((i + 1) * 256) / segment_count;
+        int x0 = center_x + ((radius * fixed_cos_u8(angle0)) >> 10);
+        int y0 = center_y + ((radius * fixed_sin_u8(angle0)) >> 10);
+        int x1 = center_x + ((radius * fixed_cos_u8(angle1)) >> 10);
+        int y1 = center_y + ((radius * fixed_sin_u8(angle1)) >> 10);
+        int cap_back[3][3] = {
+            {center_x, center_y, back_z},
+            {x1, y1, back_z},
+            {x0, y0, back_z}
+        };
+        int cap_front[3][3] = {
+            {center_x, center_y, front_z},
+            {x0, y0, front_z},
+            {x1, y1, front_z}
+        };
+        int side_a[3][3] = {
+            {x0, y0, back_z},
+            {x1, y1, back_z},
+            {x1, y1, front_z}
+        };
+        int side_b[3][3] = {
+            {x0, y0, back_z},
+            {x1, y1, front_z},
+            {x0, y0, front_z}
+        };
+
+        rotate_vertices(cap_back, 3, theta_x, theta_y, theta_z);
+        translate_vertices(cap_back, 3, offset_x, offset_y, offset_z);
+        cylinder_dirty = union_dirty_rects(
+            cylinder_dirty,
+            draw_mesh_triangle(cap_back, frame, cap_color)
+        );
+
+        rotate_vertices(cap_front, 3, theta_x, theta_y, theta_z);
+        translate_vertices(cap_front, 3, offset_x, offset_y, offset_z);
+        cylinder_dirty = union_dirty_rects(
+            cylinder_dirty,
+            draw_mesh_triangle(cap_front, frame, cap_color)
+        );
+
+        rotate_vertices(side_a, 3, theta_x, theta_y, theta_z);
+        translate_vertices(side_a, 3, offset_x, offset_y, offset_z);
+        cylinder_dirty = union_dirty_rects(
+            cylinder_dirty,
+            draw_mesh_triangle(side_a, frame, side_color)
+        );
+
+        rotate_vertices(side_b, 3, theta_x, theta_y, theta_z);
+        translate_vertices(side_b, 3, offset_x, offset_y, offset_z);
+        cylinder_dirty = union_dirty_rects(
+            cylinder_dirty,
+            draw_mesh_triangle(side_b, frame, side_color)
+        );
+    }
+
+    return cylinder_dirty;
+}
+
 #endif // CYLINDER_H
+#endif

@@ -113,13 +113,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         // Call the movement and look logic from control.h
         update_controls(hwnd, is_focused);
 
-        render_pixels();
+        DirtyRect present_dirty = render_pixels();
 
-        StretchDIBits(
-            hdc, 0, 0, g_screen.width, g_screen.height,
-            0, 0, g_screen.width, g_screen.height,
-            g_screen.pixels, &bmi, DIB_RGB_COLORS, SRCCOPY
-        );
+        if (dirty_rect_is_valid(present_dirty)) {
+            int dirty_width = present_dirty.x1 - present_dirty.x0;
+            int dirty_height = present_dirty.y1 - present_dirty.y0;
+
+            StretchDIBits(
+                hdc,
+                present_dirty.x0,
+                present_dirty.y0,
+                dirty_width,
+                dirty_height,
+                present_dirty.x0,
+                g_screen.height - present_dirty.y1,
+                dirty_width,
+                dirty_height,
+                g_screen.pixels,
+                &bmi,
+                DIB_RGB_COLORS,
+                SRCCOPY
+            );
+        }
 
         LARGE_INTEGER current_time;
         QueryPerformanceCounter(&current_time);

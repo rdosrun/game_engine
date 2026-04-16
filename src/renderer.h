@@ -68,6 +68,19 @@ typedef struct DirtyRect {
     int y1;
 } DirtyRect;
 
+typedef struct RendererSceneState {
+    int control_x;
+    int control_y;
+    int control_z;
+    int cam_sin_yaw;
+    int cam_cos_yaw;
+    int cam_sin_pitch;
+    int cam_cos_pitch;
+    int theta_x;
+    int theta_y;
+    int theta_z;
+} RendererSceneState;
+
 static DirtyRect make_dirty_rect(int x0, int y0, int x1, int y1);
 static void draw_cube(
     const int cube_vertices[8][3],
@@ -326,6 +339,23 @@ static DirtyRect union_dirty_rects(DirtyRect a, DirtyRect b) {
     );
 }
 
+static DirtyRect full_screen_dirty_rect(void) {
+    return make_dirty_rect(0, 0, g_screen.width, g_screen.height);
+}
+
+static bool renderer_scene_state_equal(RendererSceneState a, RendererSceneState b) {
+    return a.control_x == b.control_x &&
+           a.control_y == b.control_y &&
+           a.control_z == b.control_z &&
+           a.cam_sin_yaw == b.cam_sin_yaw &&
+           a.cam_cos_yaw == b.cam_cos_yaw &&
+           a.cam_sin_pitch == b.cam_sin_pitch &&
+           a.cam_cos_pitch == b.cam_cos_pitch &&
+           a.theta_x == b.theta_x &&
+           a.theta_y == b.theta_y &&
+           a.theta_z == b.theta_z;
+}
+
 static void clear_dirty_rect(DirtyRect rect, uint32_t color) {
     rect = clamp_dirty_rect(rect);
     if (!dirty_rect_is_valid(rect)) return;
@@ -582,6 +612,121 @@ static DirtyRect draw_mesh_triangle(
     return dirty_rect;
 }
 
+static bool project_mesh_point(
+    const int point[3],
+    const RendererFrameContext *frame,
+    int *screen_x,
+    int *screen_y,
+    int *depth
+) {
+    const int fp_shift = 10;
+    int final_x = point[0];
+    int final_y = point[1];
+    int final_z = point[2] + frame->world_offset_z;
+    int translated_x = final_x - frame->control_x;
+    int translated_y = final_y - frame->control_y;
+    int translated_z = final_z - frame->control_z;
+    int view_x = ((translated_x * frame->cam_cos_yaw) - (translated_z * frame->cam_sin_yaw)) >> fp_shift;
+    int view_z = ((translated_x * frame->cam_sin_yaw) + (translated_z * frame->cam_cos_yaw)) >> fp_shift;
+    int view_y = ((translated_y * frame->cam_cos_pitch) - (view_z * frame->cam_sin_pitch)) >> fp_shift;
+    int point_depth = ((translated_y * frame->cam_sin_pitch) + (view_z * frame->cam_cos_pitch)) >> fp_shift;
+
+    if (point_depth <= frame->near_plane) {
+        return false;
+    }
+
+    if (screen_x) *screen_x = frame->screen_center_x + (view_x * frame->focal_length) / point_depth;
+    if (screen_y) *screen_y = frame->screen_center_y - (view_y * frame->focal_length) / point_depth;
+    if (depth) *depth = point_depth;
+    return true;
+}
+
+static int rotate_circle_vertices(
+    const int center[3],
+    int radius,
+    int triangle_count,
+    int theta_x,
+    int theta_y,
+    int theta_z,
+    int circle_vertices[257][3]
+) {
+    if (radius <= 0) return 0;
+    if (triangle_count < 3) triangle_count = 3;
+    if (triangle_count > 256) triangle_count = 256;
+
+    circle_vertices[0][0] = center[0];
+    circle_vertices[0][1] = center[1];
+    circle_vertices[0][2] = center[2];
+
+    for (int i = 0; i < triangle_count; ++i) {
+        int angle = (i * 256) / triangle_count;
+        circle_vertices[i + 1][0] = center[0] + ((radius * fixed_cos_u8(angle)) >> 10);
+        circle_vertices[i + 1][1] = center[1] + ((radius * fixed_sin_u8(angle)) >> 10);
+        circle_vertices[i + 1][2] = center[2];
+    }
+
+    rotate_vertices(circle_vertices, triangle_count + 1, theta_x, theta_y, theta_z);
+    return triangle_count;
+}
+
+static DirtyRect draw_mesh_circle(
+    const int center[3],
+    int radius,
+    const RendererFrameContext *frame,
+    int triangle_count,
+    int offset_x,
+    int offset_y,
+    int offset_z,
+    int theta_x,
+    int theta_y,
+    int theta_z,
+    bool flip_winding,
+    uint32_t color
+) {
+    int circle_vertices[257][3];
+    DirtyRect circle_dirty = make_dirty_rect(g_screen.width, g_screen.height, 0, 0);
+    int clamped_triangle_count;
+
+    if (!frame || radius <= 0) {
+        return circle_dirty;
+    }
+
+    clamped_triangle_count = rotate_circle_vertices(
+        center,
+        radius,
+        triangle_count,
+        theta_x,
+        theta_y,
+        theta_z,
+        circle_vertices
+    );
+    translate_vertices(circle_vertices, clamped_triangle_count + 1, offset_x, offset_y, offset_z);
+
+    for (int i = 0; i < clamped_triangle_count; ++i) {
+        int next = (i + 1) % clamped_triangle_count;
+        int triangle_vertices[3][3] = {
+            {circle_vertices[0][0], circle_vertices[0][1], circle_vertices[0][2]},
+            {
+                circle_vertices[flip_winding ? next + 1 : i + 1][0],
+                circle_vertices[flip_winding ? next + 1 : i + 1][1],
+                circle_vertices[flip_winding ? next + 1 : i + 1][2]
+            },
+            {
+                circle_vertices[flip_winding ? i + 1 : next + 1][0],
+                circle_vertices[flip_winding ? i + 1 : next + 1][1],
+                circle_vertices[flip_winding ? i + 1 : next + 1][2]
+            }
+        };
+
+        circle_dirty = union_dirty_rects(
+            circle_dirty,
+            draw_mesh_triangle(triangle_vertices, frame, color)
+        );
+    }
+
+    return circle_dirty;
+}
+
 static DirtyRect draw_meshed_asset(
     const SurfaceMesherResult *mesh,
     const RendererFrameContext *frame,
@@ -727,13 +872,23 @@ static void draw_cube(
     }
 }
 
-static void render_pixels(void) {
+#include "assets/cylinder.h"
+#include "assets/sphere.h"
+#include "assets/rectangular_prism.h"
+#include "assets/pyramid.h"
+#include "assets/ground.h"
+#include "assets/map.h"
+
+static DirtyRect render_pixels(void) {
     static int theta_x = 0;
     static int theta_y = 0;
     static int theta_z = 0;
     static bool dirty_initialized = false;
     static DirtyRect previous_scene_dirty = {0, 0, 0, 0};
+    static RendererSceneState previous_scene_state = {0};
+    static int previous_fps = -1;
     RendererFrameContext frame;
+    RendererSceneState scene_state;
 
     init_demo_meshes();
 
@@ -759,37 +914,99 @@ static void render_pixels(void) {
         frame.cam_cos_pitch = fixed_cos_u8(pitch_index);
     }
 
+    scene_state.control_x = frame.control_x;
+    scene_state.control_y = frame.control_y;
+    scene_state.control_z = frame.control_z;
+    scene_state.cam_sin_yaw = frame.cam_sin_yaw;
+    scene_state.cam_cos_yaw = frame.cam_cos_yaw;
+    scene_state.cam_sin_pitch = frame.cam_sin_pitch;
+    scene_state.cam_cos_pitch = frame.cam_cos_pitch;
+    scene_state.theta_x = theta_x;
+    scene_state.theta_y = theta_y;
+    scene_state.theta_z = theta_z;
+
     {
         DirtyRect fps_dirty = get_fps_counter_rect();
-        DirtyRect redraw_rect = union_dirty_rects(previous_scene_dirty, fps_dirty);
+        bool scene_changed = !dirty_initialized ||
+            !renderer_scene_state_equal(scene_state, previous_scene_state);
+        bool fps_changed = !dirty_initialized || g_fps != previous_fps;
+        DirtyRect present_dirty = make_dirty_rect(g_screen.width, g_screen.height, 0, 0);
         DirtyRect current_scene_dirty = make_dirty_rect(g_screen.width, g_screen.height, 0, 0);
+
+        if (!scene_changed && !fps_changed) {
+            return present_dirty;
+        }
 
         if (!dirty_initialized) {
             clear_screen(0x00000000);
             clear_depth_buffer();
+            present_dirty = full_screen_dirty_rect();
         } else {
-            clear_dirty_rect(redraw_rect, 0x00000000);
+            if (scene_changed) {
+                clear_dirty_rect(previous_scene_dirty, 0x00000000);
+                present_dirty = union_dirty_rects(present_dirty, previous_scene_dirty);
+            }
+            if (fps_changed) {
+                clear_dirty_rect(fps_dirty, 0x00000000);
+                present_dirty = union_dirty_rects(present_dirty, fps_dirty);
+            }
         }
 
-        for (int i = 0; i < 6; ++i) {
-            DirtyRect asset_dirty = draw_meshed_asset(
-                &g_demo_meshes[i],
-                &frame,
-                g_demo_mesh_offsets[i][0],
-                g_demo_mesh_offsets[i][1],
-                g_demo_mesh_offsets[i][2],
-                theta_x,
-                theta_y,
-                theta_z
+        if (scene_changed) {
+            /*for (int i = 0; i < 6; ++i) {
+                DirtyRect asset_dirty = draw_meshed_asset(
+                    &g_demo_meshes[i],
+                    &frame,
+                    g_demo_mesh_offsets[i][0],
+                    g_demo_mesh_offsets[i][1],
+                    g_demo_mesh_offsets[i][2],
+                    theta_x,
+                    theta_y,
+                    theta_z
+                );
+                current_scene_dirty = union_dirty_rects(current_scene_dirty, asset_dirty);
+            }*/
+            current_scene_dirty = union_dirty_rects(
+                current_scene_dirty,
+                draw_map_mesh(&frame, theta_x, theta_y, theta_z)
             );
-            current_scene_dirty = union_dirty_rects(current_scene_dirty, asset_dirty);
+
+            {
+                static const int example_ground[4][3] = {
+                    {-520, -340, -160},
+                    { 520, -340, -160},
+                    { 520,  340, -160},
+                    {-520,  340, -160}
+                };
+                DirtyRect ground_dirty = draw_ground_tile_mesh(
+                    example_ground,
+                    &frame,
+                    0,
+                    -480,
+                    0,
+                    64,
+                    0,
+                    0,
+                    0x002F7D32,
+                    0x006B4A2D
+                );
+                current_scene_dirty = union_dirty_rects(current_scene_dirty, ground_dirty);
+            }
+
+            previous_scene_dirty = current_scene_dirty;
+            previous_scene_state = scene_state;
+            present_dirty = union_dirty_rects(present_dirty, current_scene_dirty);
         }
-        //static void draw_circle(int center_x, int center_y, int radius, int triangle_count, uint32_t color) {
-        draw_circle(100,100,50,20,0x00FFFFFF);
-        previous_scene_dirty = union_dirty_rects(current_scene_dirty, fps_dirty);
+
+        if (fps_changed || scene_changed) {
+            draw_fps_counter();
+            present_dirty = union_dirty_rects(present_dirty, fps_dirty);
+            previous_fps = g_fps;
+        }
+
         dirty_initialized = true;
+        return clamp_dirty_rect(present_dirty);
     }
-    draw_fps_counter();
 }
 
 #endif // RENDERER_H

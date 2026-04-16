@@ -6,6 +6,10 @@
 #include "ground.h"
 #include "primitive_points.h"
 #include "cylinder.h"
+#include "sphere.h"
+#include "rectangular_prism.h"
+#include "pyramid.h"
+#include "map.h"
 
 // Future assets can be added here:
 // #include "tree.h"

@@ -1,12 +1,12 @@
 10.1000-200
-/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton Hotfix/files/share/fonts/
-/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton Hotfix/files/lib/
+/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton - Experimental/files/share/fonts/
+/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton - Experimental/files/lib/
 /home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam
-1763795004.0
-1763795012.0
+1773370498.0
+1773370502.0
 1516738214.0
-/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton Hotfix/files/share/default_pfx/
-1775958859.6914718
+/home/richardh/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Proton - Experimental/files/share/default_pfx/
+1774605626.6074576
 False
 True
 d3dcompiler_*.dll,d3dcsx*.dll,d3dx*.dll,dx8vb.dll,x3daudio*.dll,xactengine*.dll,xapofx*.dll,xaudio*.dll,xinput*.dll,atl1*.dll,atl.dll,concrt*.dll,msvcp1*.dll,msvcrt*.dll,msvcp7*.dll,msvcp6*.dll,msvcp_win.dll,msvcr1*.dll,msvcrt*.dll,msvcr7*.dll,vcamp1*.dll,vcomp1*.dll,vccorlib1*.dll,vcruntime1*.dll,ucrtbase.dll,ntdll.dll,vulkan-1.dll,ir50_32.dll

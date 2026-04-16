@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <windows.h>
+#include "collision.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -24,44 +25,20 @@ typedef struct {
 
 extern Controller g_control;
 
-static bool collides_with_scene(float x, float y, float z) {
-    const float player_radius = 24.0f;
-    const float player_height = 60.0f;
-    const float cube_half_size = 120.0f;
-    const float cube_centers_x[5] = {240.0f, 480.0f, 720.0f, 960.0f, 1200.0f};
-    const float cube_center_y = 0.0f;
-    const float cube_center_z = 900.0f;
-
-    for (int i = 0; i < 5; ++i) {
-        float min_x = cube_centers_x[i] - cube_half_size - player_radius;
-        float max_x = cube_centers_x[i] + cube_half_size + player_radius;
-        float min_y = cube_center_y - cube_half_size - player_height;
-        float max_y = cube_center_y + cube_half_size + player_height;
-        float min_z = cube_center_z - cube_half_size - player_radius;
-        float max_z = cube_center_z + cube_half_size + player_radius;
-
-        if (x >= min_x && x <= max_x &&
-            y >= min_y && y <= max_y &&
-            z >= min_z && z <= max_z) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 static void try_move_controller(float delta_x, float delta_y, float delta_z) {
     float next_x = g_control.pos_x + delta_x;
     float next_y = g_control.pos_y + delta_y;
     float next_z = g_control.pos_z + delta_z;
 
-    if (!collides_with_scene(next_x, g_control.pos_y, g_control.pos_z)) {
+    if (!collision_point_hits_scene(next_x, g_control.pos_y, g_control.pos_z)) {
         g_control.pos_x = next_x;
     }
-    if (!collides_with_scene(g_control.pos_x, next_y, g_control.pos_z)) {
-        g_control.pos_y = next_y;
+    if (!collision_point_hits_scene(g_control.pos_x, next_y, g_control.pos_z)) {
+        if (!(delta_y < 0.0f && collision_point_hits_ground(next_y))) {
+            g_control.pos_y = next_y;
+        }
     }
-    if (!collides_with_scene(g_control.pos_x, g_control.pos_y, next_z)) {
+    if (!collision_point_hits_scene(g_control.pos_x, g_control.pos_y, next_z)) {
         g_control.pos_z = next_z;
     }
 }
@@ -81,7 +58,7 @@ static void update_controls(HWND hwnd, bool is_focused) {
         if (dx != 0 || dy != 0) {
             float sensitivity = 0.002f;
             g_control.yaw += (float)dx * sensitivity;
-            g_control.pitch += (float)dy * sensitivity;
+            g_control.pitch -= (float)dy * sensitivity;
 
             // Clamp pitch to prevent flipping
             if (g_control.pitch > (float)M_PI/2.1f) g_control.pitch = (float)M_PI/2.1f;
